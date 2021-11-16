@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public string playerName = "Nombre de jugador";
-    public int playerLives;
-    public float playerSpeed = 5.0f;
-    public float playerRotationSpeed = 3f;
-    private Vector2 characterRotation = new Vector2();
-    public bool sizex2 = false;
-    private Rigidbody rbPlayer;
+    [SerializeField] public string playerName = "Nombre de jugador";
+    [SerializeField] public int playerLives;
+    [SerializeField] public float playerSpeed = 5.0f;
+    [SerializeField] public float playerRotationSpeed = 3f;
+    [SerializeField] private Vector2 characterRotation = new Vector2();
+    [SerializeField] public bool sizex2 = false;
+    [SerializeField] private Rigidbody rbPlayer;
+    [SerializeField] private Animator animPlayer;
 
     // Start is called before the first frame update
     void Start()
@@ -20,7 +21,7 @@ public class PlayerController : MonoBehaviour
         Debug.Log("Game starting");
         Debug.Log(transform.position);
         rbPlayer = GetComponent<Rigidbody>();
-
+        animPlayer.SetBool("Run",false);
     }
 
     // Update is called once per frame
@@ -53,7 +54,17 @@ public class PlayerController : MonoBehaviour
         Debug.Log(ejeHorizontal + "   " + ejeVertical);
         //rbPlayer.AddForce(playerSpeed * Time.deltaTime * new Vector3(ejeHorizontal, 0, ejeVertical),ForceMode.Impulse);
 
-        transform.Translate(playerSpeed * Time.deltaTime * new Vector3(ejeHorizontal, 0, ejeVertical));
+        if(Input.GetAxisRaw("Horizontal")==0 && Input.GetAxisRaw("Vertical") ==0)
+        {
+            animPlayer.SetBool("Run", false);
+        }
+        else
+        {
+            animPlayer.SetBool("Run", true);
+                transform.Translate(playerSpeed * Time.deltaTime * new Vector3(ejeHorizontal, 0, ejeVertical));
+            animPlayer.SetBool("Run", true);
+        }
+        
     }
     void RotatePlayer()
     {
